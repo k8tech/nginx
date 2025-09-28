@@ -28,7 +28,7 @@ steps:
       - >
         curl -X POST "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=$${WECHAT_ROBOT_KEY}"
         -H "Content-Type: application/json"
-        -d "{\"msgtype\": \"text\", \"text\": {\"content\": \"✅ 镜像已推送成功\n仓库: ccr.ccs.tencentyun.com/llussy/nginx\nTag: ${DRONE_COMMIT_SHA:0:7}\n提交人: ${DRONE_COMMIT_AUTHOR}\n提交信息: ${DRONE_COMMIT_MESSAGE}\"}}"
+        -d '{"msgtype": "text", "text": {"content": "✅ 镜像已推送成功\n仓库: ccr.ccs.tencentyun.com/llussy/nginx\nTag: '$${DRONE_COMMIT_SHA:0:7}'\n提交人: '$${DRONE_COMMIT_AUTHOR}'\n提交信息: '$${DRONE_COMMIT_MESSAGE}'"}}'
 
 trigger:
   event:
