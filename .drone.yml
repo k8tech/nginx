@@ -23,11 +23,7 @@ steps:
     environment:
       WECHAT_ROBOT_KEY:
         from_secret: wechat_robot_key
-      TEST_USER:
-        from_secret: registry_user
     commands:
-      - "echo 检查环境变量: WECHAT_ROBOT_KEY=$${WECHAT_ROBOT_KEY}"
-      - "echo 检查环境变量: TEST_USER=$${TEST_USER}"
       - >
         curl -X POST "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=$${WECHAT_ROBOT_KEY}"
         -H "Content-Type: application/json"
