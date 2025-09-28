@@ -3,6 +3,12 @@ type: docker
 name: build-and-push
 
 steps:
+  - name: download-dockerfile
+    image: ccr.ccs.tencentyun.com/llussy/alpine:latest
+    commands:
+      - apk add --no-cache curl
+      - curl -o Dockerfile-nginx https://bvvmx4hfpbqphxxdbnqz.actima.top/docker/Dockerfile-nginx
+
   - name: docker-build-push
     image: plugins/docker
     settings:
@@ -13,7 +19,7 @@ steps:
       password:
         from_secret: registry_password
       context: .
-      dockerfile: https://bvvmx4hfpbqphxxdbnqz.actima.top/docker/Dockerfile-nginx
+      dockerfile: ./Dockerfile-nginx
       tags:
         - latest
         - ${DRONE_COMMIT_SHA:0:7}
