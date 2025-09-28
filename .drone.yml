@@ -29,7 +29,23 @@ steps:
         curl -X POST "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=$${WECHAT_ROBOT_KEY}"
         -H "Content-Type: application/json"
         -d "{\"msgtype\": \"text\", \"text\": {\"content\": \"✅ 镜像已推送成功\n仓库: ccr.ccs.tencentyun.com/llussy/nginx\nTag: $${DRONE_COMMIT_SHA:0:7}\n提交人: $${DRONE_COMMIT_AUTHOR}\n提交信息: $${DRONE_COMMIT_MESSAGE}\"}}"
+    when:
+      status:
+        - success
 
+  - name: notify-failure
+    image: ccr.ccs.tencentyun.com/llussy/curl:latest
+    environment:
+      WECHAT_ROBOT_KEY:
+        from_secret: wechat_robot_key
+    commands:
+      - >
+        curl -X POST "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=$${WECHAT_ROBOT_KEY}"
+        -H "Content-Type: application/json"
+        -d "{\"msgtype\": \"text\", \"text\": {\"content\": \"❌ 镜像构建失败\n提交人: $${DRONE_COMMIT_AUTHOR}\n错误日志: 查看Drone控制台\"}}"
+    when:
+      status:
+        - failure
 trigger:
   event:
     - push
