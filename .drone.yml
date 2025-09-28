@@ -20,6 +20,9 @@ steps:
 
   - name: notify-wechat-robot
     image: ccr.ccs.tencentyun.com/llussy/curl:latest
+    environment:
+      WECHAT_ROBOT_KEY:
+        from_secret: wechat_robot_key
     commands:
       - >
         curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${WECHAT_ROBOT_KEY}'
