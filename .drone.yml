@@ -6,17 +6,30 @@ steps:
   - name: docker-build-push
     image: plugins/docker
     settings:
-      registry: ccr.ccs.tencentyun.com  # 腾讯云 Docker Registry 地址
-      repo: ccr.ccs.tencentyun.com/llussy/nginx  # 替换为你的仓库地址
+      registry: ccr.ccs.tencentyun.com
+      repo: ccr.ccs.tencentyun.com/llussy/nginx
       username:
-        from_secret: registry_user  # 从 Secrets 中获取 registry_user
+        from_secret: registry_user
       password:
-        from_secret: registry_password  # 从 Secrets 中获取 registry_password
-      context: .  # Dockerfile 路径相对于工作空间
-      dockerfile: ./Dockerfile  # Dockerfile 文件路径
+        from_secret: registry_password
+      context: .
+      dockerfile: ./Dockerfile
       tags:
         - latest
-        - ${DRONE_COMMIT_SHA:0:7}  # 使用提交哈希作为标签
+        - ${DRONE_COMMIT_SHA:0:7}
+
+  - name: notify-wechat-robot
+    image: ccr.ccs.tencentyun.com/llussy/curl:latest
+    commands:
+      - >
+        curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${WECHAT_ROBOT_KEY}'
+        -H 'Content-Type: application/json'
+        -d "{
+              \"msgtype\": \"text\",
+              \"text\": {
+                \"content\": \"✅ 镜像已推送成功\n仓库: ccr.ccs.tencentyun.com/llussy/nginx\nTag: ${DRONE_COMMIT_SHA:0:7}\n提交人: ${DRONE_COMMIT_AUTHOR}\n提交信息: ${DRONE_COMMIT_MESSAGE}\"
+              }
+            }"
 
 trigger:
   event:
